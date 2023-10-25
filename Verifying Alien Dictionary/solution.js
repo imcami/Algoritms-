@@ -1,85 +1,42 @@
-const alphabet0 = [
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
-];
-
-const alphabet1 = [
-  "f",
-  "j",
-  "d",
-  "k",
-  "s",
-  "l",
-  "a",
-  "v",
-  "g",
-  "h",
-  "z",
-  "q",
-  "i",
-  "u",
-  "m",
-  "w",
-  "p",
-  "b",
-  "x",
-  "n",
-  "c",
-  "o",
-  "y",
-  "t",
-  "r",
-  "e",
-];
-
-function alienDictionary(wordsArray, dictionary, humanAlphabet) {
-  // Crear un objeto de mapeo para una búsqueda eficiente
-  let charMap = {};
-  for (let i = 0; i < dictionary.length; i++) {
-    charMap[dictionary[i]] = humanAlphabet[i];
+var isAlienSorted = function (palabras, orden) {
+  //  Mapa del diccionario alienigena
+  var mapa_diccionario = new Map();
+  for (let i = 0; i < orden.length; i++) {
+    mapa_diccionario.set(orden[i], i);
   }
 
-  let result = [];
-  for (let i = 0; i < wordsArray.length; i++) {
-    let word = wordsArray[i];
-    let temp = [];
-    for (let j = 0; j < word.length; j++) {
-      // Manejar el caso donde el caracter no está en el diccionario
-      if (!charMap[word[j]]) {
-        throw new Error(`Character ${word[j]} is not in the dictionary`);
+  // Función para comparar palabras
+  var comparar = function (palabra1, palabra2) {
+    const longitud = Math.min(palabra1.length, palabra2.length);
+    for (let i = 0; i < longitud; i++) {
+      if (
+        mapa_diccionario.get(palabra1[i]) < mapa_diccionario.get(palabra2[i])
+      ) {
+        return true;
       }
-      temp.push(charMap[word[j]]);
+      if (
+        mapa_diccionario.get(palabra1[i]) > mapa_diccionario.get(palabra2[i])
+      ) {
+        return false;
+      }
     }
-    result.push(temp.join(""));
-  }
-  return result;
-}
+    return palabra1.length <= palabra2.length;
+  };
 
-// Uso de la función:
-const wordsArray = ["hello", "world"];
-const result = alienDictionary(wordsArray, alphabet1, alphabet0);
-console.log(result); // Salida: ["avyll", "dlihd"]
+  // Revisar el orden de las palabras
+  for (let i = 1; i < palabras.length; i++) {
+    if (comparar(palabras[i - 1], palabras[i]) === false) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/*
+// Datos de prueba
+var palabras = ["hello", "leetcode"];
+var orden = "hlabcdefgijkmnopqrstuvwxyz";
+
+// Llamada a la función y salida en consola
+console.log(isAlienSorted(palabras, orden)); // Debería imprimir 'true'
+*/
